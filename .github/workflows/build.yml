@@ -1,4 +1,12 @@
 name: Build OpenJDK for Android
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build_android:
     strategy:
       matrix:
         arch: [ "aarch32", "aarch64", "x86", "x86_64" ]
@@ -63,7 +71,7 @@ name: Build OpenJDK for Android
         name: jre11-x86_64
         path: pojav
     - name: Repack JRE
-      run: bash "repackjre.sh" $GITHUB_WORKSPACE/pojav $GITHUB_WORKSPACE/pojav/jre17-pojav
+      run: bash "repackjre.sh" $GITHUB_WORKSPACE/pojav $GITHUB_WORKSPACE/pojav/jre11-pojav
     - name: Upload artifact
       uses: actions/upload-artifact@v4.3.0
       with:
