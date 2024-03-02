@@ -67,5 +67,5 @@ name: Build OpenJDK for Android
     - name: Upload artifact
       uses: actions/upload-artifact@v4.3.0
       with:
-          name: jre17-pojav
-          path: pojav/jre17-pojav/*
+          name: jre11-pojav
+          path: pojav/jre11-pojav/*
