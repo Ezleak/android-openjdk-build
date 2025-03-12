@@ -91,7 +91,6 @@ bash ./configure \
     --with-debug-level="release" \
     --with-version-pre="FoldCraftLauncher" \
     --with-vendor-name="dontknowhy" \
-    --with-version-string="MT8797" \
     --openjdk-target=$TARGET \
     --with-extra-cflags="$CFLAGS" \
     --with-extra-cxxflags="$CFLAGS" \
