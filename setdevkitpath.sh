@@ -1,6 +1,6 @@
 # Use the old NDK r10e to not get internal compile error at (still?)
 # https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u/blob/aarch64-shenandoah-jdk8u272-b10/jdk/src/share/native/sun/java2d/loops/GraphicsPrimitiveMgr.c
-export NDK_VERSION=r27c
+export NDK_VERSION=r28
 
 if [[ -z "$BUILD_FREETYPE_VERSION" ]]
 then
@@ -26,7 +26,7 @@ fi
 
 export JVM_PLATFORM=linux
 # Set NDK
-export API=22
+export API=24
 
 # Runners usually ship with a recent NDK already
 if [[ -z "$ANDROID_NDK_HOME" ]]
@@ -34,12 +34,12 @@ then
   export ANDROID_NDK_HOME=$PWD/android-ndk-$NDK_VERSION
 fi
 
-export TOOLCHAIN=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64
+export TOOLCHAIN=$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64
 
 export ANDROID_INCLUDE=$TOOLCHAIN/sysroot/usr/include
 
 export CPPFLAGS="-I$ANDROID_INCLUDE -I$ANDROID_INCLUDE/$TARGET" # -I/usr/include -I/usr/lib
-export LDFLAGS="-flto=thin -Wl,-plugin-opt=-emulated-tls=0"
+export LDFLAGS="-flto=thin -fuse-ld=lld -Wl,-plugin-opt=-emulated-tls=0"
 export thecc=$TOOLCHAIN/bin/${TARGET}${API}-clang
 export thecxx=$TOOLCHAIN/bin/${TARGET}${API}-clang++
 
@@ -57,6 +57,3 @@ export READELF=$TOOLCHAIN/bin/llvm-readelf
 export RANLIB=$TOOLCHAIN/bin/llvm-ranlib
 export STRIP=$TOOLCHAIN/bin/llvm-strip
 export LINK=$TOOLCHAIN/bin/llvm-link
-
-export BUILD_CC=/usr/bin/clang-18
-export BUILD_CXX=/usr/bin/clang++-18
