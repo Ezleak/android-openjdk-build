@@ -1,6 +1,9 @@
-# mobile-openjdk25-build
+# Layered Toolchain Workflow
 
-Based on http://openjdk.java.net/projects/mobile/android.html
+Layered Toolchain Workflow (LTW)
+↑ DeepSeek renamed it. You know what I'm talking about.
+
+Based on https://github.com/aaaapai/android-openjdk-build
 
 ## Building 
 
