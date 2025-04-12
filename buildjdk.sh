@@ -18,7 +18,8 @@ fi
 
 if [[ "$TARGET_JDK" == "aarch64" ]]
 then
-   export CFLAGS+=" -march=armv8-a+simd"
+   #export CFLAGS+=" -march=armv8-a+simd"
+   echo "foo" # 后面手动加上了特定于MT8797的cpu flag
 fi
    
 # if [ "$TARGET_JDK" == "aarch32" ] || [ "$TARGET_JDK" == "aarch64" ]
@@ -48,7 +49,7 @@ platform_args="--with-toolchain-type=clang \
   BUILD_AS="$AS" \
   OBJCOPY=${OBJCOPY} \
   CXXFILT=${CXXFILT} \
-  LD=$TOOLCHAIN/bin/ld \
+  LD=$TOOLCHAIN/bin/ld.lld \
   "
 
 if [[ "$TARGET_JDK" == "x86" ]]; then
@@ -61,9 +62,10 @@ AUTOCONF_EXTRA_ARGS+="OBJCOPY=$OBJCOPY \
   AR=$AR \
   STRIP=$STRIP \
   "
-
-export CFLAGS+=" -DANDROID -pipe -integrated-as -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -flto=thin -mllvm -polly-parallel -fopenmp=libomp -mllvm -polly-omp-backend=LLVM -mllvm -polly-scheduling=dynamic -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context -mllvm -regalloc-enable-priority-advisor=release -mllvm -regalloc-priority-interactive-channel-base=foo" #不是哥们怎么看着这么熟悉呢
-export CFLAGS+=" -Xclang "-target-feature" -Xclang "+v8.2a" -Xclang "-target-feature" -Xclang "+crc" -Xclang "-target-feature" -Xclang "+fp-armv8" -Xclang "-target-feature" -Xclang "+lse" -Xclang "-target-feature" -Xclang "+neon" -Xclang "-target-feature" -Xclang "+ras" -Xclang "-target-feature" -Xclang "+rdm" -Xclang "-target-feature" -Xclang "+fix-cortex-a53-835769" -Xclang "-target-feature" -Xclang "+fp" -Xclang "-target-feature" -Xclang "+simd" -Xclang "-target-abi" -Xclang "aapcs" -mcpu=cortex-a78" # Stupid flags
+#export CFLAGS+=" -DANDROID -pipe -integrated-as -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -flto=thin -mllvm -polly-parallel -fopenmp=libomp -mllvm -polly-omp-backend=LLVM -mllvm -polly-scheduling=dynamic -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context -mllvm -regalloc-enable-priority-advisor=release -mllvm -regalloc-priority-interactive-channel-base=foo" #不是哥们怎么看着这么熟悉呢
+export CFLAGS+=" -Xclang "-target-feature" -Xclang "+v8.2a" -Xclang "-target-feature" -Xclang "+crc" -Xclang "-target-feature" -Xclang "+fp-armv8" -Xclang "-target-feature" -Xclang "+lse" -Xclang "-target-feature" -Xclang "+neon" -Xclang "-target-feature" -Xclang "+ras" -Xclang "-target-feature" -Xclang "+rdm" -Xclang "-target-feature" -Xclang "+fix-cortex-a53-835769" -Xclang "-target-feature" -Xclang "+fp" -Xclang "-target-feature" -Xclang "+simd" -Xclang "-target-abi" -Xclang "aapcs" -mcpu=cortex-a78" # MT8797,由-march=native而来
+export CFLAGS+=" -DANDROID -D__ANDROID__=1 -pipe -integrated-as -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -fno-semantic-interposition -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -mllvm -polly-parallel -mllvm -polly-scheduling=dynamic -mllvm -polly-omp-backend=LLVM -fopenmp=libomp -flto=thin -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context -ftree-vectorize -fomit-frame-pointer" # 加回去手动指定omp后端的flag,虽然没什么用,clang也只有这个可选
+# -fopenmp=libomp这一类手动指定openmp实现的flag貌似是自动生成的前提
 export LDFLAGS+=" -L$PWD/dummy_libs -fuse-ld=lld" 
 
 # Create dummy libraries so we won't have to remove them in OpenJDK makefiles
@@ -89,8 +91,10 @@ git apply --reject --whitespace=fix ../patches/jdk25u_android.diff || echo "git 
 
 bash ./configure \
     --with-debug-level="release" \
-    --with-version-pre="FoldCraftLauncher" \
+    --with-version-pre="dontknowhy" \
     --with-vendor-name="dontknowhy" \
+    --with-version-opt="" \
+    --with-boot-jdk-jvmargs="-XX:+UnlockExperimentalVMOptions -XX:+UnlockDiagnosticVMOptions -XX:+AlwaysActAsServerClassMachine -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+UseNUMA -XX:NmethodSweepActivity=1 -XX:ReservedCodeCacheSize=400M -XX:ProfiledCodeHeapSize=194M -XX:-DontCompileHugeMethods -XX:MaxNodeLimit=240000 -XX:NodeLimitFudgeFactor=8000 -XX:+UseVectorCmov -XX:+PerfDisableSharedMem -XX:+UseFastUnorderedTimeStamps -XX:+UseCriticalJavaThreadPriority -XX:ThreadPriorityPolicy=1 -XX:AllocatePrefetchStyle=3 -XX:+UseZGC -XX:AllocatePrefetchStyle=1 -XX:-ZProactive -XX:+UseCriticalJavaThreadPriority -XX:+UseSignalChaining -Dfml.ignoreInvalidMinecraftCertificates=true -XX:+UseStringDeduplication -XX:+UseCompressedOops -XX:+UseFastJNIAccessors -XX:+OptimizeStringConcat -XX:+UseThreadPriorities -XX:+EnableJVMCI -XX:+EagerJVMCI" \ #为什么要启用NUMA,actions还有配置这玩意吗
     --openjdk-target=$TARGET \
     --with-extra-cflags="$CFLAGS" \
     --with-extra-cxxflags="$CFLAGS" \
@@ -100,7 +104,8 @@ bash ./configure \
     --enable-option-checking=fatal \
     --enable-headless-only=yes \
     --with-jvm-variants=$JVM_VARIANTS \
-    --with-jvm-features=-dtrace,-zero,-vm-structs,link-time-opt,opt-size \
+    --with-jvm-features=-dtrace,-zero,-vm-structs,link-time-opt \
+    --enable-linktime-gc \
     --with-cups-include=$CUPS_DIR \
     --with-devkit=$TOOLCHAIN \
     --with-native-debug-symbols=external \
