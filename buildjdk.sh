@@ -50,12 +50,20 @@ AUTOCONF_EXTRA_ARGS+="OBJCOPY=$OBJCOPY \
   STRIP=$STRIP \
   "
 
-#export CFLAGS+=" -DANDROID -pipe -integrated-as -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -flto=thin -mllvm -polly-parallel -fopenmp=libomp -mllvm -polly-omp-backend=LLVM -mllvm -polly-scheduling=dynamic -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context -mllvm -regalloc-enable-priority-advisor=release -mllvm -regalloc-priority-interactive-channel-base=foo" #不是哥们怎么看着这么熟悉呢
 export CFLAGS+=" -Xclang "-target-feature" -Xclang "+v8.2a" -Xclang "-target-feature" -Xclang "+crc" -Xclang "-target-feature" -Xclang "+fp-armv8" -Xclang "-target-feature" -Xclang "+lse" -Xclang "-target-feature" -Xclang "+neon" -Xclang "-target-feature" -Xclang "+ras" -Xclang "-target-feature" -Xclang "+rdm" -Xclang "-target-feature" -Xclang "+fix-cortex-a53-835769" -Xclang "-target-feature" -Xclang "+fp" -Xclang "-target-feature" -Xclang "+simd" -Xclang "-target-abi" -Xclang "aapcs" -mcpu=cortex-a78" # MT8797,由-march=native而来
-export CFLAGS+=" -DANDROID -D__ANDROID__=1 -pipe -integrated-as -DLE_STANDALONE -Wno-int-conversion -Wno-error=implicit-function-declaration" # -I$FREETYPE_DIR -I$CUPS_DI
-export CFLAGS+=" -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -fno-semantic-interposition -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -mllvm -polly-parallel -mllvm -polly-scheduling=dynamic -mllvm -polly-omp-backend=LLVM -fopenmp=libomp -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context" # Polly
-export CFLAGS+=" -O3 -flto=thin -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -ftree-vectorize"
+
+export CFLAGS+=" -DANDROID -D__ANDROID__=1 -pipe -integrated-as -DLE_STANDALONE -Wno-int-conversion -Wno-error=implicit-function-declaration"
+
+export CFLAGS+=" -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -mllvm -polly-parallel -mllvm -polly-scheduling=dynamic -mllvm -polly-omp-backend=LLVM -fopenmp=libomp -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context" # Polly
+
+export CFLAGS+="-mllvm -polly-vectorizer=slp -mllvm -polly-memory -mllvm -polly-opt-parallelize-parallel -mllvm -polly-opt-outer-loops" # Polly extra
+
+export CFLAGS+=" -O3 -flto=thin -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -ftree-vectorize -fomit-frame-pointer -fno-semantic-interposition -integrated-as"
+
 export CFLAGS+=" -ffast-math" # -Ofast
+
+export LDFLAGS+=" -fuse-ld=lld -Wl,-plugin-opt=-emulated-tls=0 -Wl,--strip-all -fvisibility=hidden -Wl,-Bsymbolic -Wl,-O3 -Wl,--sort-common -Wl,--relax -Wl,--gc-sections -Wl,--as-needed"
+export LDFLAGS+=" -flto=thin -O3"
 export LDFLAGS+=" -L$PWD/dummy_libs" 
 
 # Create dummy libraries so we won't have to remove them in OpenJDK makefiles
