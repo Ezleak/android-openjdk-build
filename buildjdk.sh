@@ -56,7 +56,7 @@ export CFLAGS+=" -DANDROID -D__ANDROID__=1 -pipe -integrated-as -DLE_STANDALONE 
 
 export CFLAGS+=" -mllvm -polly -mllvm -polly-vectorizer=stripmine -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -mllvm -polly-invariant-load-hoisting -mllvm -polly-run-inliner -mllvm -polly-run-dce -mllvm -polly-parallel -mllvm -polly-scheduling=dynamic -mllvm -polly-omp-backend=LLVM -fopenmp=libomp -mllvm -polly-detect-keep-going -mllvm -polly-ast-use-context" # Polly
 
-export CFLAGS+="-fvectorize -fslp-vectorize -mllvm -polly-memory -mllvm -polly-opt-parallelize-parallel -mllvm -polly-opt-outer-loops" # Polly extra
+export CFLAGS+="-fvectorize -fslp-vectorize -mllvm -polly-ast-detect-parallel -mllvm -polly-optimized-scops" # Polly extra
 
 export CFLAGS+=" -O3 -flto=thin -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -ftree-vectorize -fomit-frame-pointer -fno-semantic-interposition -integrated-as"
 
