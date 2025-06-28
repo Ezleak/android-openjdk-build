@@ -60,10 +60,10 @@ export CFLAGS+=" -fvectorize -fslp-vectorize -mllvm -polly-ast-detect-parallel -
 
 export CFLAGS+=" -O3 -flto=thin -fno-emulated-tls -fwhole-program-vtables -fdata-sections -ffunction-sections -fmerge-all-constants -mllvm -hot-cold-split=true -ftree-vectorize -fomit-frame-pointer -fno-semantic-interposition -integrated-as"
 
-export CFLAGS+=" -ffast-math" # -Ofast
+export CFLAGS+=" -ffast-math -fno-finite-math-only -fno-signed-zeros -fno-trapping-math -fno-math-errno -freciprocal-math -fno-associative-math" # -Ofast
 
-export LDFLAGS+=" -fuse-ld=lld -Wl,-plugin-opt=-emulated-tls=0 -Wl,--strip-all -fvisibility=hidden -Wl,-Bsymbolic -Wl,-O3 -Wl,--sort-common -Wl,--relax -Wl,--gc-sections -Wl,--as-needed"
-export LDFLAGS+=" -flto=thin -O3"
+export LDFLAGS+=" -fuse-ld=lld -Wl,-plugin-opt=-emulated-tls=0 -Wl,--strip-all -fvisibility=hidden -Wl,-Bsymbolic -Wl,-O3 -Wl,--sort-common -Wl,--relax -Wl,--gc-sections -Wl,--as-needed -Wl,--lto-O3 -Wl,-plugin-opt=-emulated-tls=0"
+export LDFLAGS+=" -flto=thin -O3 -fopenmp -l:libomp.a" #我知道你在视奸我，那我问你，这里的-l:libomp.a干啥用的
 export LDFLAGS+=" -L$PWD/dummy_libs" 
 
 # Create dummy libraries so we won't have to remove them in OpenJDK makefiles
