@@ -9,6 +9,7 @@ export PATH=$TOOLCHAIN/bin:$PATH
 ./configure \
   --host=$TARGET \
   --prefix=${PWD}/build_android-${TARGET_SHORT} \
+  LD=$TOOLCHAIN/bin/ld.lld \
   --without-zlib \
   --with-brotli=system \
   --with-png=no \
@@ -21,5 +22,6 @@ if [[ "$error_code" -ne 0 ]]; then
   exit $error_code
 fi
 
-CFLAGS=-fno-rtti CXXFLAGS=-fno-rtti make -j4
+
+CFLAGS="-Ofast -fno-emulated-tls -fno-rtti -march=armv8-a+simd" CXXFLAGS="-Ofast -fno-emulated-tls -fno-rtti -march=armv8-a+simd" make -j4
 make install
