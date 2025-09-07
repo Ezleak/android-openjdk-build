@@ -50,7 +50,7 @@ AUTOCONF_EXTRA_ARGS+="OBJCOPY=$OBJCOPY \
   STRIP=$STRIP \
   "
 
-export CFLAGS+=" -Xclang "-target-feature" -Xclang "+v8.2a" -Xclang "-target-feature" -Xclang "+crc" -Xclang "-target-feature" -Xclang "+fp-armv8" -Xclang "-target-feature" -Xclang "+lse" -Xclang "-target-feature" -Xclang "+neon" -Xclang "-target-feature" -Xclang "+ras" -Xclang "-target-feature" -Xclang "+rdm" -Xclang "-target-feature" -Xclang "+fix-cortex-a53-835769" -Xclang "-target-feature" -Xclang "+fp" -Xclang "-target-feature" -Xclang "+simd" -Xclang "-target-abi" -Xclang "aapcs"" # MT8797,由-march=native而来
+export CFLAGS+=" -Xclang "-target-feature" -Xclang "+v8.2a" -Xclang "-target-feature" -Xclang "+crc" -Xclang "-target-feature" -Xclang "+fp-armv8" -Xclang "-target-feature" -Xclang "+lse" -Xclang "-target-feature" -Xclang "+neon" -Xclang "-target-feature" -Xclang "+ras" -Xclang "-target-feature" -Xclang "+rdm" -Xclang "-target-feature" -Xclang "+fix-cortex-a53-835769" -Xclang "-target-feature" -Xclang "+fp" -Xclang "-target-feature" -Xclang "+simd" -Xclang "-target-abi" -Xclang "aapcs" -mtune=cortex-a78 -mcpu=cortex-a78" # MT8797,由-march=native而来
 
 export CFLAGS+=" -DANDROID -D__ANDROID__=1 -pipe -integrated-as -DLE_STANDALONE -Wno-int-conversion -Wno-error=implicit-function-declaration"
 
