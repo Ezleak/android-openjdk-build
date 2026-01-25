@@ -2,6 +2,7 @@ name: Build OpenJDK for Android
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   build_android:
@@ -36,8 +37,3 @@ jobs:
       with:
         name: 'jre27-${{matrix.arch}}'
         path: jre27-android*.tar.xz
-    - name: Upload JRE debuginfo build output
-      uses: actions/upload-artifact@main
-      with:
-        name: "jre27-debuginfo-${{matrix.arch}}"
-        path: dizout
