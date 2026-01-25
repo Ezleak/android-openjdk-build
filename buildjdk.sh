@@ -83,8 +83,8 @@ git apply --reject --whitespace=fix ../patches/jdk25u_android.diff || echo "git 
 
 bash ./configure \
     --with-debug-level="release" \
-    --with-version-pre="dontknowhy" \
-    --with-vendor-name="dontknowhy" \
+    --with-version-pre="funny_animals" \
+    --with-vendor-name="funny_animals" \
     --with-version-opt="" \
     --with-boot-jdk-jvmargs="-XX:+UnlockExperimentalVMOptions -XX:+UnlockDiagnosticVMOptions -XX:+AlwaysActAsServerClassMachine -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+UseNUMA -XX:NmethodSweepActivity=1 -XX:ReservedCodeCacheSize=400M -XX:ProfiledCodeHeapSize=194M -XX:-DontCompileHugeMethods -XX:MaxNodeLimit=240000 -XX:NodeLimitFudgeFactor=8000 -XX:+UseVectorCmov -XX:+PerfDisableSharedMem -XX:+UseFastUnorderedTimeStamps -XX:+UseCriticalJavaThreadPriority -XX:ThreadPriorityPolicy=1 -XX:AllocatePrefetchStyle=3 -XX:AllocatePrefetchStyle=1 -XX:+UseCriticalJavaThreadPriority -XX:+UseStringDeduplication -XX:+UseFastJNIAccessors -XX:+UseThreadPriorities" \
     --openjdk-target=$TARGET \
